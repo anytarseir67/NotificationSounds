@@ -46,4 +46,3 @@ create a `sound_conf.json` file in that directory, and place any sound files the
 ```
 
 only one sound can be triggered per event, and are checked in the order of overrides -> users -> channels
-
