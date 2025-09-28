@@ -38,6 +38,9 @@ create a `sound_conf.json` file in that directory, and place any sound files the
                 ],
                 "message": [
                     {"sound": "soft_notification_rev2", "vol": "0.4"}
+                ],
+                "reaction": [
+                    {"sound": "soft_notification_distort", "vol": "0.4"}
                 ]
         }
     },

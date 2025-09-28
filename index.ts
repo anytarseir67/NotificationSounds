@@ -24,7 +24,6 @@ async function getSound(name: string): Promise<string> {
         sound = data
         sounds[name] = data
     }
-    console.log(sound)
     return sound
 }
 
@@ -130,16 +129,21 @@ export default definePlugin({
             if (data.optimistic == true) {
                 return
             }
-            console.log("message data", data)
             let message = data.message as Message;
 
             handleEvent(message.author.id, message.channel_id, "message")
             typing_flags[message.author.id] = true
 
         },
+                
+        MESSAGE_REACTION_ADD: data => {
+            let user_id = data.userId
+            let channel_id = data.channelId
+
+            handleEvent(user_id, channel_id, "reaction")
+        },
 
         TYPING_START: data => {
-            console.log("start data", data)
             let channel_id = data.channelId;
             let user_id = data.userId;
 
@@ -151,7 +155,6 @@ export default definePlugin({
         },
 
         TYPING_STOP: data => {
-            console.log("stop data", data)
             let user_id = data.userId;
 
             typing_flags[user_id] = true;
