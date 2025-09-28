@@ -2,7 +2,7 @@ import definePlugin from "@utils/types";
 import { Message } from "@vencord/discord-types";
 import { PluginNative } from "@utils/types";
 
-import { ApplicationCommandInputType, sendBotMessage } from "@api/Commands";
+import { ApplicationCommandInputType, ApplicationCommandOptionType, findOption, sendBotMessage } from "@api/Commands";
 
 const Native = VencordNative.pluginHelpers.NotificationSounds as PluginNative<typeof import("./native")>;
 
@@ -76,53 +76,27 @@ export default definePlugin({
         name: "reload",
         description: "Reload the notification config",
         inputType: ApplicationCommandInputType.BUILT_IN,
+        options: [
+            {
+                name: "clear",
+                description: "whether to clear the loaded sounds or not",
+                required: false,
+                type: ApplicationCommandOptionType.BOOLEAN,
+            },
+        ],
         execute: async (args, ctx) => {
             config = await Native.readConfig()
+
+            if (findOption(args, "clear", false)) {
+                sounds = {} // clear the loaded sounds
+            }
+
             sendBotMessage(ctx.channel.id, {
                 content: "Config reloaded",
             });
         },
     },
-    // was planning on adding a command to modify the config, but it seems like you can't actually use attachments, which means you would need to open the folder with the config anyway, so...
-    //
-    // {
-    //     name: "notification",
-    //     description: "Update notification sound",
-    //     inputType: ApplicationCommandInputType.BUILT_IN,
-    //     options: [
-    //         {
-    //             name: "sound",
-    //             description: "",
-    //             required: true,
-    //             type: ApplicationCommandOptionType.ATTACHMENT,
-    //         },
-    //         {
-    //             name: "channel",
-    //             description: "",
-    //             required: false,
-    //             type: ApplicationCommandOptionType.CHANNEL,
-    //         },
-    //         {
-    //             name: "user",
-    //             description: "",
-    //             required: false,
-    //             type: ApplicationCommandOptionType.USER,
-    //         }
-    //     ],
-    //     execute: async (args, ctx) => {
-    //         const sound = findOption(args, "sound")
-    //         const channel = findOption(args, "channel")
-    //         const user = findOption(args, "user")
-
-    //         console.log(sound)
-
-    //         sendBotMessage(ctx.channel.id, {
-    //             content: ``,
-    //         });
-    //     },
-    // }
     ],
-
 
     flux: {
         MESSAGE_CREATE: data => {
